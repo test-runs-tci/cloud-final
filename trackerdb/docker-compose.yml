@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: trackerdb
+    volumes:
+    - db:/data/postgres
+    ports:
+    - "5432:5432"
+    restart: always
+    # healthcheck:
+    #   test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+    - 8020:8080
+volumes:
+  db:

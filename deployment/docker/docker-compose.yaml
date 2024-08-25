@@ -1,0 +1,46 @@
+version: "3"
+services:   
+  tracker-backend:
+    image: mzucc/tracker-backend
+    ports:
+    - "3000:3000"
+    environment:
+      POSTGRES_USERNAME: $POSTGRES_USERNAME
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
+      POSTGRES_DB: $POSTGRES_DB 
+      POSTGRES_HOST: $POSTGRES_HOST 
+  tracker-frontend:
+    image: mzucc/tracker-frontend
+    ports:
+    - "5173:5173"
+    environment:
+      VITE_AWS_REGION: $AWS_REGION 
+      VITE_AWS_COGNITO_USERPOOLID: $AWS_COGNITO_USERPOOLID
+      VITE_AWS_COGNITO_CLIENTID: $AWS_COGNITO_CLIENTID
+  db:
+    container_name: postgres
+    image: postgres
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+    - db:/data/postgres
+    ports:
+    - "5432:5432"
+    restart: always
+    # healthcheck:
+    #   test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+    - 8020:8080
+volumes:
+  db:
