@@ -2,7 +2,7 @@ version: "3.9"
 services:
   tracker-backend:
     build:
-      context: ../../tracker
+      context: ../../backend
     image: mzucc/tracker-backend
   tracker-frontend:
     build:
