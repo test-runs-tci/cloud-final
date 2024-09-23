@@ -6,6 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import Snackbar from '@mui/material/Snackbar';
+import Alert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import {
   GridRowsProp,
@@ -22,6 +24,7 @@ import {
   GridSlots,
   GridPreProcessEditCellProps,
   useGridApiRef,
+  GridEditInputCell,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -29,6 +32,8 @@ import {
   randomId,
   randomArrayItem,
 } from '@mui/x-data-grid-generator';
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 
 const roles = ['Market', 'Finance', 'Development'];
@@ -154,9 +159,15 @@ export default function FullFeaturedCrudGrid() {
     
   };
 
-  const handleProcessRowUpdateError = () => {
+  const [snackbar, setSnackbar] = React.useState<Pick<
+    AlertProps,
+    'children' | 'severity'
+  > | null>(null);
 
-  };
+  const handleCloseSnackbar = () => setSnackbar(null);
+  const handleProcessRowUpdateError = React.useCallback((error: Error) => {
+    setSnackbar({ children: error.message, severity: 'error' });
+  }, []);
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -174,6 +185,29 @@ export default function FullFeaturedCrudGrid() {
     });
   }
 
+  const StyledTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.error.main,
+      color: theme.palette.error.contrastText,
+    },
+  }));
+
+  function NameEditInputCell(props) {
+    const { error } = props;
+  
+    return (
+      <StyledTooltip open={!!error} title={error}>
+        <GridEditInputCell {...props} />
+      </StyledTooltip>
+    );
+  }
+  
+  function renderEditName(params) {
+    return <NameEditInputCell {...params} />;
+  }
+
   const columns: GridColDef[] = [
     { 
         field: 'name', 
@@ -181,6 +215,7 @@ export default function FullFeaturedCrudGrid() {
         width: 180, 
         editable: true, 
         flex: 1,
+        renderEditCell: renderEditName,
         preProcessEditCellProps: async (params: GridPreProcessEditCellProps) => {
             const hasError: any = params.props.value.length < 3;
             // if(hasError) {

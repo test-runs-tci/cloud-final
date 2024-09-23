@@ -17,5 +17,6 @@ export const sequelize = new Sequelize({
 
 export async function syncModels() {
   sequelize.addModels([Trade])
-  await sequelize.sync({ force: true });
+  //await sequelize.sync({ force: true });
+  await sequelize.sync();
 }

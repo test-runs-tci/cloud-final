@@ -12,16 +12,17 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
     let body = req.body;
-
+console.log("body", body);
     const trade = await Trade.create({
-        ticker: 'NVDA',
-        shares: 13,
-        price: 129.29,
-        time: new Date(2024, 9, 3, 14, 22, 36),
-        comments: 'long'
+        ticker: body.ticker,
+        shares: body.shares,
+        price: body.price,
+        //time: new Date(2024, 9, 3, 14, 22, 36),
+        time: body.time,
+        comments: body.comments
     });
 
-    res.send({});
+    res.send(body);
 });
 
 export const trades_rtr: Router = router;
