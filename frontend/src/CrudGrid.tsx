@@ -113,6 +113,29 @@ export default function FullFeaturedCrudGrid() {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const apiRef = useGridApiRef();
 
+  React.useEffect(() => {
+    let accessToken = sessionStorage.getItem('accessToken');
+
+
+    const fetcher = async () => {
+      // fetch data from server
+      const data = await fetch('http://localhost:3000/api/v0/trades/', {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': accessToken
+        })
+        // body: JSON.stringify({
+        //   page: paginationModel.page,
+        //   pageSize: paginationModel.pageSize,
+        //   sortModel,
+        //   filterModel,
+        // }),
+      });
+     // setRows(data);
+    };
+    fetcher();
+  });//, [paginationModel, sortModel, filterModel]);
+
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;

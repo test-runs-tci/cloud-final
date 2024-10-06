@@ -2,6 +2,11 @@ import { Table, Column, Model, AllowNull, Default, DataType, Length, Max } from 
 
 @Table
 export class Trade extends Model {
+  @Length({ msg: 'Must be between 1 and 50 characters.', min: 1, max: 50 })
+  @AllowNull(false)
+  @Column(DataType.STRING(50))
+  user_id!: string;
+
   @Length({ msg: 'Must be between 1 and 5 characters.', min: 1, max: 5 })
   @AllowNull(true)
   @Column(DataType.STRING(25))

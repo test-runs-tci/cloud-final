@@ -23,6 +23,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 	cognitoExpress.validate(accessTokenFromClient, function(err: any, response: any) {
 		if (!err) {
             res.locals.user = response;
+            console.log(res.locals.user);
             next();
         }
         else {

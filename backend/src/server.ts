@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express, {ErrorRequestHandler, NextFunction, Express, Request, Response} from 'express';
 import { sequelize, syncModels } from './sequelize.js';
 import { requireAuth } from './auth.js';
+import cors from 'cors';
 import { v0_rtr } from './controllers/v0/index.js'
 
 const app: Express = express();
@@ -18,6 +19,7 @@ const port = 3000;
         console.error('Unable to connect to the database:', error);
     }
 
+    app.use(cors);
     app.use(requireAuth);
     app.use(express.json());
     app.use('/api/v0', v0_rtr);
