@@ -4,6 +4,9 @@ import { sequelize, syncModels } from './sequelize.js';
 import { requireAuth } from './auth.js';
 import cors from 'cors';
 import { v0_rtr } from './controllers/v0/index.js'
+import { config } from './config/config.js';
+
+const c = config.dev;
 
 const app: Express = express();
 const port = 3000;
@@ -19,7 +22,18 @@ const port = 3000;
         console.error('Unable to connect to the database:', error);
     }
 
-    app.use(cors);
+    var whitelist = [c.url]
+    var corsOptions = {
+    origin: function (origin: any, callback: any) {
+            if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+            } else {
+            callback(new Error('Not allowed by CORS'))
+            }
+        }
+    }
+
+    app.use(cors(corsOptions));
     app.use(requireAuth);
     app.use(express.json());
     app.use('/api/v0', v0_rtr);
