@@ -22,6 +22,8 @@ router.post('/', async (req: Request, res: Response) => {
     let user_id = res.locals.user.sub;
 
     let body = req.body;
+    console.log('req', req);
+
 console.log("body", body);
     const trade = await Trade.create({
         user_id: user_id,

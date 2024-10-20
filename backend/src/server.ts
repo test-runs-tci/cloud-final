@@ -33,7 +33,8 @@ const port = 3000;
         }
     }
 
-    app.use(cors(corsOptions));
+    //app.use(cors(corsOptions));
+    app.use(cors());
     app.use(requireAuth);
     app.use(express.json());
     app.use('/api/v0', v0_rtr);

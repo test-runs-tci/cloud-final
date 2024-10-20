@@ -55,11 +55,13 @@ function EditToolbar(props: EditToolbarProps) {
 
   const handleClick = () => {
     const id = randomId();
-
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', role: '', isNew: true }]);
+console.log('random id', id);
+    setRows((oldRows) => 
+      [...oldRows, { id, isNew: true }]
+    );
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'ticker' },
     }));
   };
 
@@ -80,6 +82,7 @@ export default function FullFeaturedCrudGrid() {
   React.useEffect(() => {
     let accessToken = sessionStorage.getItem('accessToken');
 
+    console.log('effected');
 
     const fetcher = async () => {
       // fetch data from server
@@ -102,7 +105,7 @@ export default function FullFeaturedCrudGrid() {
     };
     
     fetcher();
-  });//, [paginationModel, sortModel, filterModel]);
+  }, [ setRows ]);//, [paginationModel, sortModel, filterModel]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -135,19 +138,45 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  const processRowUpdate = (newRow: GridRowModel, originalRow: GridRowModel) => {
+  const processRowUpdate = async (newRow: GridRowModel, originalRow: GridRowModel) => {
     // return with return { ...updatedRow, _action: 'delete' }; for delete, see
     // https://mui.com/x/react-data-grid/editing/#the-processrowupdate-callback
     // return f00alse;
-    if(newRow.age < 18) {
-        return originalRow;
-    }
-    else {
-        const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
-    }
-    
+    // if(newRow.age < 18) {
+    //     return originalRow;
+    // }
+
+// comments
+// id
+// isNew
+// price
+// shares
+// ticker
+// time
+    let accessToken = sessionStorage.getItem('accessToken');
+
+    const config = {
+      method: 'POST',
+      headers: new Headers({
+        'Authorization': accessToken,
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        ticker: newRow.ticker,
+        price: newRow.price,
+        shares: newRow.shares,
+        time: newRow.time.toLocaleString(),
+        comments: newRow.comments
+      }),
+    };
+
+    const response = await fetch('http://localhost:3000/api/v0/trades/', config);
+
+
+    const updatedRow = { ...newRow, isNew: false };
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    return updatedRow;
+
   };
 
   const [snackbar, setSnackbar] = React.useState<Pick<
@@ -262,22 +291,6 @@ export default function FullFeaturedCrudGrid() {
 
     //         return { ...params.props, error: errorMsg };
     //     }
-    // },
-    // {
-    //   field: 'age',
-    //   headerName: 'Age',
-    //   type: 'number',
-    //   width: 80,
-    //   align: 'left',
-    //   headerAlign: 'left',
-    //   editable: true
-    // },
-    // {
-    //   field: 'joinDate',
-    //   headerName: 'Join date',
-    //   type: 'date',
-    //   width: 180,
-    //   editable: true,
     // },
     // {
     //   field: 'role',
