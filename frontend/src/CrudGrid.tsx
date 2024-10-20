@@ -41,43 +41,7 @@ const randomRole = () => {
   return randomArrayItem(roles);
 };
 
-const initialRows: GridRowsProp = [
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 25,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 36,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 19,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 28,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 23,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-];
+const initialRows: GridRowsProp = [];
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -119,7 +83,7 @@ export default function FullFeaturedCrudGrid() {
 
     const fetcher = async () => {
       // fetch data from server
-      const data = await fetch('http://localhost:3000/api/v0/trades/', {
+      const response = await fetch('http://localhost:3000/api/v0/trades/', {
         method: 'GET',
         headers: new Headers({
           'Authorization': accessToken
@@ -131,8 +95,12 @@ export default function FullFeaturedCrudGrid() {
         //   filterModel,
         // }),
       });
-     // setRows(data);
+      const data = await response.json();
+      console.log('response', response);
+      console.log('data', data);
+      setRows(data);
     };
+    
     fetcher();
   });//, [paginationModel, sortModel, filterModel]);
 
@@ -232,26 +200,18 @@ export default function FullFeaturedCrudGrid() {
   }
 
   const columns: GridColDef[] = [
-    { 
-        field: 'name', 
-        headerName: 'Name', 
-        width: 180, 
-        editable: true, 
-        flex: 1,
-        renderEditCell: renderEditName,
-        preProcessEditCellProps: async (params: GridPreProcessEditCellProps) => {
-            const hasError: any = params.props.value.length < 3;
-            // if(hasError) {
-            //     hasError = "Name must be 3 or more characters";
-            // }
-            let errorMsg = await validateName(params.props.value);
-
-            return { ...params.props, error: errorMsg };
-        }
+    {
+        field: 'ticker',
+        headerName: 'Ticker Symbol',
+        width: 220,
+        type: 'string',
+        align: 'left',
+        headerAlign: 'left',
+        editable: true
     },
     {
-      field: 'age',
-      headerName: 'Age',
+      field: 'shares',
+      headerName: '# Shares',
       type: 'number',
       width: 80,
       align: 'left',
@@ -259,20 +219,74 @@ export default function FullFeaturedCrudGrid() {
       editable: true
     },
     {
-      field: 'joinDate',
-      headerName: 'Join date',
-      type: 'date',
-      width: 180,
-      editable: true,
+      field: 'price',
+      headerName: 'Price',
+      type: 'number',
+      width: 150,
+      align: 'left',
+      headerAlign: 'left',
+      editable: true
     },
     {
-      field: 'role',
-      headerName: 'Department',
-      width: 220,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: ['','Market', 'Finance', 'Development'],
+      field: 'time',
+      headerName: 'Time',
+      type: 'dateTime',
+      valueGetter: (value) => value && new Date(value),
+      width: 200,
+      align: 'left',
+      headerAlign: 'left',
+      editable: true
     },
+    {
+      field: 'comments',
+      headerName: 'Comments',
+      width: 200,
+      type: 'string',
+      align: 'left',
+      headerAlign: 'left',
+      editable: true
+    },
+    // { 
+    //     field: 'name', 
+    //     headerName: 'Name', 
+    //     width: 180, 
+    //     editable: true, 
+    //     flex: 1,
+    //     renderEditCell: renderEditName,
+    //     preProcessEditCellProps: async (params: GridPreProcessEditCellProps) => {
+    //         const hasError: any = params.props.value.length < 3;
+    //         // if(hasError) {
+    //         //     hasError = "Name must be 3 or more characters";
+    //         // }
+    //         let errorMsg = await validateName(params.props.value);
+
+    //         return { ...params.props, error: errorMsg };
+    //     }
+    // },
+    // {
+    //   field: 'age',
+    //   headerName: 'Age',
+    //   type: 'number',
+    //   width: 80,
+    //   align: 'left',
+    //   headerAlign: 'left',
+    //   editable: true
+    // },
+    // {
+    //   field: 'joinDate',
+    //   headerName: 'Join date',
+    //   type: 'date',
+    //   width: 180,
+    //   editable: true,
+    // },
+    // {
+    //   field: 'role',
+    //   headerName: 'Department',
+    //   width: 220,
+    //   editable: true,
+    //   type: 'singleSelect',
+    //   valueOptions: ['','Market', 'Finance', 'Development'],
+    // },
     {
       field: 'actions',
       type: 'actions',
