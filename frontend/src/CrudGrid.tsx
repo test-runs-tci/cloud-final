@@ -117,12 +117,29 @@ export default function FullFeaturedCrudGrid() {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id: GridRowId) => () => {
+  const handleSaveClick = (id: GridRowId) => async () => {
     let editedRow = apiRef.current.getRow(id);
+
+    console.log('editedRow', editedRow);
+
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick =  (id: GridRowId) => async () => {
+
+    let accessToken = sessionStorage.getItem('accessToken');
+
+    const config = {
+      method: 'DELETE',
+      headers: new Headers({
+        'Authorization': accessToken,
+        'Content-Type': 'application/json'
+      })
+    };
+
+   const response = await fetch(`http://localhost:3000/api/v0/trades/${id}`, config);
+
     setRows(rows.filter((row) => row.id !== id));
   };
 
@@ -155,19 +172,29 @@ export default function FullFeaturedCrudGrid() {
 // time
     let accessToken = sessionStorage.getItem('accessToken');
 
+    let body = {
+      ticker: newRow.ticker,
+      price: newRow.price,
+      shares: newRow.shares,
+      time: newRow.time.toLocaleString(),
+      comments: newRow.comments
+    };
+
+    let method = 'POST';
+
+    if(!newRow.isNew)
+    {
+      body['id'] = newRow.id;
+      method = 'PUT';
+    }
+
     const config = {
-      method: 'POST',
+      method: method,
       headers: new Headers({
         'Authorization': accessToken,
         'Content-Type': 'application/json'
       }),
-      body: JSON.stringify({
-        ticker: newRow.ticker,
-        price: newRow.price,
-        shares: newRow.shares,
-        time: newRow.time.toLocaleString(),
-        comments: newRow.comments
-      }),
+      body: JSON.stringify(body),
     };
 
     const response = await fetch('http://localhost:3000/api/v0/trades/', config);
