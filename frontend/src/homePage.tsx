@@ -3,7 +3,6 @@
 
 import { useNavigate } from 'react-router-dom';
 import FullFeaturedCrudGrid from './CrudGrid';
-import ValidateServerNameGrid from './ValidateServerNameGrid';
 
 /*eslint-disable*/
 function parseJwt (token) {
@@ -37,9 +36,8 @@ const HomePage = () => {
 
   return (
       <div>
-        <h1 style={{ color: '#ff0000' }}>Hello World</h1>
+        <h1 style={{ color: '#ff0000' }}>Trades</h1>
         <div style={{ width: '100%' }}>
-          {/* <ValidateServerNameGrid></ValidateServerNameGrid> */}
           <FullFeaturedCrudGrid></FullFeaturedCrudGrid>
         </div>
         <div>

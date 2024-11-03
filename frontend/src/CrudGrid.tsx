@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import config from "./config";
+
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -36,6 +38,7 @@ import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { errorMonitor } from 'events';
 
+let apiUrl = config.apiUrl;
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
@@ -85,7 +88,7 @@ export default function FullFeaturedCrudGrid() {
 
     const fetcher = async () => {
       // fetch data from server
-      const response = await fetch('http://localhost:3000/api/v0/trades/', {
+      const response = await fetch(`${apiUrl}/api/v0/trades/`, {
         method: 'GET',
         headers: new Headers({
           'Authorization': accessToken
@@ -134,7 +137,7 @@ export default function FullFeaturedCrudGrid() {
       })
     };
 
-   const response = await fetch(`http://localhost:3000/api/v0/trades/${id}`, config);
+   const response = await fetch(`${apiUrl}/api/v0/trades/${id}`, config);
 
     setRows(rows.filter((row) => row.id !== id));
   };
@@ -193,12 +196,11 @@ export default function FullFeaturedCrudGrid() {
       body: JSON.stringify(body),
     };
 
-    const response = await fetch('http://localhost:3000/api/v0/trades/', config);
+    const response = await fetch(`${apiUrl}/api/v0/trades/`, config);
 
     return new Promise(async (resolve, reject) => {
       if(response.status >= 200 && response.status <= 299)
       {
-        console.log('status is 200');
         let resp = await response.json();
   
         const updatedRow = { ...newRow, isNew: false, id: !newRow.isNew ? newRow.id : resp.inserted_id };
@@ -211,7 +213,6 @@ export default function FullFeaturedCrudGrid() {
       }
       else
       {
-        console.log('rejecting');
         reject(new Error("There was an error server-side."));
       }
     });

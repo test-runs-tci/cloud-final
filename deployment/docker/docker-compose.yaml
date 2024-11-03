@@ -21,6 +21,7 @@ services:
       VITE_AWS_REGION: $AWS_REGION 
       VITE_AWS_COGNITO_USERPOOLID: $AWS_COGNITO_USERPOOLID
       VITE_AWS_COGNITO_CLIENTID: $AWS_COGNITO_CLIENTID
+      VITE_API_URL: $API_URL
   db:
     container_name: postgres
     image: postgres
