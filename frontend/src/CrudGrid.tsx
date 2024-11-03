@@ -55,7 +55,7 @@ function EditToolbar(props: EditToolbarProps) {
 
   const handleClick = () => {
     const id = randomId();
-console.log('random id', id);
+
     setRows((oldRows) => 
       [...oldRows, { id, isNew: true }]
     );
@@ -82,8 +82,6 @@ export default function FullFeaturedCrudGrid() {
   React.useEffect(() => {
     let accessToken = sessionStorage.getItem('accessToken');
 
-    console.log('effected');
-
     const fetcher = async () => {
       // fetch data from server
       const response = await fetch('http://localhost:3000/api/v0/trades/', {
@@ -99,8 +97,7 @@ export default function FullFeaturedCrudGrid() {
         // }),
       });
       const data = await response.json();
-      console.log('response', response);
-      console.log('data', data);
+
       setRows(data);
     };
     
@@ -119,8 +116,6 @@ export default function FullFeaturedCrudGrid() {
 
   const handleSaveClick = (id: GridRowId) => async () => {
     let editedRow = apiRef.current.getRow(id);
-
-    console.log('editedRow', editedRow);
 
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
 
@@ -199,8 +194,10 @@ export default function FullFeaturedCrudGrid() {
 
     const response = await fetch('http://localhost:3000/api/v0/trades/', config);
 
+    let resp = await response.json();
 
-    const updatedRow = { ...newRow, isNew: false };
+    const updatedRow = { ...newRow, isNew: false, id: !newRow.isNew ? newRow.id : resp.inserted_id };
+
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
 

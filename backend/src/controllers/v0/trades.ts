@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { ErrorRequestHandler } from 'express-serve-static-core';
 import { Trade } from '../../models/trade.js';
 import { idText } from 'typescript';
+import { json } from 'sequelize';
 
 const router: Router = Router();
 
@@ -23,7 +24,6 @@ router.post('/', async (req: Request, res: Response) => {
     let user_id = res.locals.user.sub;
 
     let body = req.body;
-    console.log('req', req);
 
     const trade = await Trade.create({
         user_id: user_id,
@@ -35,16 +35,15 @@ router.post('/', async (req: Request, res: Response) => {
         comments: body.comments
     });
 
-    res.send(body);
+    let resp = { inserted_id: trade.id };
+
+    res.send(resp);
 });
 
 router.put('/', async (req: Request, res: Response) => {
     let user_id = res.locals.user.sub;
 
     let body = req.body;
-    console.log('req', req);
-
-    console.log('start');
 
     const trade = await Trade.update({
         ticker: body.ticker,
@@ -61,8 +60,6 @@ router.put('/', async (req: Request, res: Response) => {
         }
 
     });
-
-    console.log('end');
 
     res.send(body);
 });
