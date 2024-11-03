@@ -1,12 +1,15 @@
 import { Request, Response } from 'express';
 import { NextFunction } from 'connect';
 import * as CognitoExpress from 'cognito-express';
+import { config } from './config/config.js';
+
+const c = config.dev;
 
 const cognitoExpress = new CognitoExpress.Strategy({
-	region: "us-east-1",
-	cognitoUserPoolId: "us-east-1_Hp5cw68QW",
-	tokenUse: "access", //Possible Values: access | id
-	tokenExpiration: 3600000 //Up to default expiration of 1 hour (3600000 ms)
+	region: c.aws_region,
+	cognitoUserPoolId: c.cognito_user_pool_id,
+	tokenUse: c.token_use, //Possible Values: access | id
+	tokenExpiration: c.token_expiration
 });
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {    

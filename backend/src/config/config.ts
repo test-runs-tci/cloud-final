@@ -4,19 +4,11 @@ export const config = {
       "password": process.env.POSTGRES_PASSWORD,
       "database": process.env.POSTGRES_DB,
       "host": process.env.POSTGRES_HOST,
-      "dialect": "postgres",
       "aws_region": process.env.AWS_REGION,
-      "aws_profile": process.env.AWS_PROFILE,
-      "aws_media_bucket": process.env.AWS_BUCKET,
+      "cognito_user_pool_id": process.env.COGNITO_USER_POOL_ID,
+      "token_use": process.env.TOKEN_USE,
+      "token_expiration": process.env.TOKEN_EXPIRATION,
       "url": process.env.URL    
-    },
-    "prod": {
-      "username": "",
-      "password": "",
-      "database": "udagram_prod",
-      "host": "",
-      "dialect": "postgres"
     }
-  
   }
   
