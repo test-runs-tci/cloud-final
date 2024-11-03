@@ -9,15 +9,20 @@ const router: Router = Router();
 router.get('/', async (req: Request, res: Response) => {
     let user_id = res.locals.user.sub;
 
-    const trades = await Trade.findAll({
-        attributes: [ 'id', 'ticker', 'shares', 'price', 'time', 'comments' ],
-        where: {
-            user_id: user_id
-        }
-    })
+    try {
+        const trades = await Trade.findAll({
+            attributes: [ 'id', 'ticker', 'shares', 'price', 'time', 'comments' ],
+            where: {
+                user_id: user_id
+            }
+        })
 
-    //res.setHeader("Access-Control-Allow-Origin", "*");
-    res.send(trades);
+        res.send(trades);
+    }
+    catch(e: unknown) {
+        res.status(400);
+        res.send({ error: 'An error has occured' });
+    }
 });
 
 router.post('/', async (req: Request, res: Response) => {
@@ -25,19 +30,25 @@ router.post('/', async (req: Request, res: Response) => {
 
     let body = req.body;
 
-    const trade = await Trade.create({
-        user_id: user_id,
-        ticker: body.ticker,
-        shares: body.shares,
-        price: body.price,
-        //time: new Date(2024, 9, 3, 14, 22, 36),
-        time: body.time,
-        comments: body.comments
-    });
+    try {
+        const trade = await Trade.create({
+            user_id: user_id,
+            ticker: body.ticker,
+            shares: body.shares,
+            price: body.price,
+            //time: new Date(2024, 9, 3, 14, 22, 36),
+            time: body.time,
+            comments: body.comments
+        });
 
-    let resp = { inserted_id: trade.id };
+        let resp = { inserted_id: trade.id };
 
-    res.send(resp);
+        res.send(resp);
+    }
+    catch(e: unknown) {
+        res.status(400);
+        res.send({ error: 'An error has occured' });
+    }
 });
 
 router.put('/', async (req: Request, res: Response) => {
@@ -45,23 +56,29 @@ router.put('/', async (req: Request, res: Response) => {
 
     let body = req.body;
 
-    const trade = await Trade.update({
-        ticker: body.ticker,
-        shares: body.shares,
-        price: body.price,
-        //time: new Date(2024, 9, 3, 14, 22, 36),
-        time: body.time,
-        comments: body.comments
-    },
-    { 
-        where: {
-            id: body.id,
-            user_id: user_id
-        }
+    try {
+        const trade = await Trade.update({
+            ticker: body.ticker,
+            shares: body.shares,
+            price: body.price,
+            //time: new Date(2024, 9, 3, 14, 22, 36),
+            time: body.time,
+            comments: body.comments
+        },
+        { 
+            where: {
+                id: body.id,
+                user_id: user_id
+            }
 
-    });
+        });
 
-    res.send(body);
+        res.send({});
+    }
+    catch(e: unknown) {
+        res.status(400);
+        res.send({ error: 'An error has occured' });
+    }
 });
 
 router.delete('/:id', async (req: Request, res: Response) => {
@@ -69,14 +86,20 @@ router.delete('/:id', async (req: Request, res: Response) => {
 
     let id = req.params.id;
 
-    let result = await Trade.destroy({
-        where: {
-            id: id,
-            user_id: user_id
-        }
-    });
+    try {
+        let result = await Trade.destroy({
+            where: {
+                id: id,
+                user_id: user_id
+            }
+        });
 
-    res.send(id);
+        res.send({});
+    }
+    catch(e: unknown) {
+        res.status(400);
+        res.send({ error: 'An error has occured' });
+    }
 });
 
 export const trades_rtr: Router = router;

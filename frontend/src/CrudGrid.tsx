@@ -34,6 +34,7 @@ import {
 } from '@mui/x-data-grid-generator';
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { errorMonitor } from 'events';
 
 
 const roles = ['Market', 'Finance', 'Development'];
@@ -194,13 +195,26 @@ export default function FullFeaturedCrudGrid() {
 
     const response = await fetch('http://localhost:3000/api/v0/trades/', config);
 
-    let resp = await response.json();
+    return new Promise(async (resolve, reject) => {
+      if(response.status >= 200 && response.status <= 299)
+      {
+        console.log('status is 200');
+        let resp = await response.json();
+  
+        const updatedRow = { ...newRow, isNew: false, id: !newRow.isNew ? newRow.id : resp.inserted_id };
+    
+        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
-    const updatedRow = { ...newRow, isNew: false, id: !newRow.isNew ? newRow.id : resp.inserted_id };
+        setSnackbar({ children: 'Successfully saved', severity: 'success' });
 
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
-
+        resolve(updatedRow);
+      }
+      else
+      {
+        console.log('rejecting');
+        reject(new Error("There was an error server-side."));
+      }
+    });
   };
 
   const [snackbar, setSnackbar] = React.useState<Pick<
@@ -209,6 +223,7 @@ export default function FullFeaturedCrudGrid() {
   > | null>(null);
 
   const handleCloseSnackbar = () => setSnackbar(null);
+
   const handleProcessRowUpdateError = React.useCallback((error: Error) => {
     setSnackbar({ children: error.message, severity: 'error' });
   }, []);
@@ -402,6 +417,16 @@ export default function FullFeaturedCrudGrid() {
           toolbar: { setRows, setRowModesModel },
         }}
       />
+      {!!snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </Box>
   );
 }
