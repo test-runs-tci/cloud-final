@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import config from "./config";
+import { useNavigate } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -78,10 +79,24 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
+class FetchError extends Error {
+  constructor(message?: string, public status?: number) {
+    super(message);
+    this.name = "FetchError";
+  }
+}
+
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const apiRef = useGridApiRef();
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    console.log('logging out');
+    sessionStorage.clear();
+    navigate('/login');
+  };
 
   React.useEffect(() => {
     let accessToken = sessionStorage.getItem('accessToken');
@@ -100,9 +115,15 @@ export default function FullFeaturedCrudGrid() {
         //   filterModel,
         // }),
       });
-      const data = await response.json();
 
-      setRows(data);
+      if(response.status === 401) {
+        handleLogout();
+      }
+      else {
+        const data = await response.json();
+
+        setRows(data);
+      }
     };
     
     fetcher();
@@ -137,9 +158,18 @@ export default function FullFeaturedCrudGrid() {
       })
     };
 
-   const response = await fetch(`${apiUrl}/api/v0/trades/${id}`, config);
+    const response = await fetch(`${apiUrl}/api/v0/trades/${id}`, config);
 
-    setRows(rows.filter((row) => row.id !== id));
+    if(response.status === 401) {
+      setSnackbar({ children: "There was an error server-side", severity: 'error' });
+
+      setTimeout(() => {
+        handleLogout();
+      }, 1000);
+    }
+    else {
+      setRows(rows.filter((row) => row.id !== id));
+    }
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -213,7 +243,7 @@ export default function FullFeaturedCrudGrid() {
       }
       else
       {
-        reject(new Error("There was an error server-side."));
+        reject(new FetchError("There was an error server-side.", response.status));
       }
     });
   };
@@ -225,8 +255,15 @@ export default function FullFeaturedCrudGrid() {
 
   const handleCloseSnackbar = () => setSnackbar(null);
 
-  const handleProcessRowUpdateError = React.useCallback((error: Error) => {
+  const handleProcessRowUpdateError = React.useCallback((error: FetchError) => {
     setSnackbar({ children: error.message, severity: 'error' });
+    
+    if(error.status === 401) {
+      setTimeout(() => {
+        handleLogout();
+      }, 1000);
+
+    }
   }, []);
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
