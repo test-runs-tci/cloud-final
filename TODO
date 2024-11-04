@@ -1,0 +1,7 @@
+Implement refresh token
+Implement Travis CI / EKS
+Better handling of server side error in the frontend so we're not duplicating code
+Better handling of exceptions from sequelize
+Remove all unnecessary code from grid and clean up
+Refine the FullFeaturedCRUDGrid so it's easier to implement in the future
+Complete postman end to end testing
