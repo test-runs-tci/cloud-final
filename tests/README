@@ -1,4 +1,4 @@
-We have integrated tests for testing the API using postman.
+We have integration tests for testing the API using postman.
 
 1. Import the accompanying Tracker.postman_collection.json into postman
 2. Since the API is protected through a JWT access token, we'll need to set 
