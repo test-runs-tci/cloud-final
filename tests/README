@@ -9,6 +9,8 @@ We have integration tests for testing the API using postman.
         the account you created, and then open the web developer tools (F12 usually)
         From the console, type "sessionStorage.accessToken" and copy the token.
      4. Paste the token into the acccessToken variable in postman.
+        (note: the token is only good for an hour, if you need a new one, sign back in
+         and get a new one)
 3. You'll also need to set the tradeEndpoint variable.  If you are running this locally
    through docker-compose, copy the Initial Value to the Current value.  Otherwise, use
    the appropriate URL for your environment.
