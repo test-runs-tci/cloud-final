@@ -9,7 +9,7 @@ data:
   API_URL: http://localhost:3000
   URL: http://localhost:5173
   TOKEN_USE: access
-  TOKEN_EXPIRATION: 3600000
+  TOKEN_EXPIRATION: "3600000"
 metadata:
   name: env-config
   
