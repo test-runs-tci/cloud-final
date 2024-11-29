@@ -34,21 +34,20 @@ spec:
               configMapKeyRef:
                 name: env-config
                 key: AWS_REGION
-                    - name: AWS_REGION
+          - name: AWS_COGNITO_USERPOOLID
             valueFrom:
               configMapKeyRef:
                 name: env-config
                 key: AWS_COGNITO_USERPOOLID
-                    - name: AWS_COGNITO_USERPOOLID
+          - name: AWS_COGNITO_CLIENTID
             valueFrom:
               configMapKeyRef:
                 name: env-config
                 key: AWS_COGNITO_CLIENTID
-                    - name: AWS_COGNITO_CLIENTID
+          - name: API_URL
             valueFrom:
               configMapKeyRef:
                 name: env-config
                 key: API_URL
-                    - name: API_URL
       restartPolicy: Always
 
