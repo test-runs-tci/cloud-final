@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 data:
   POSTGRES_DB: trackerdb
-  POSTGRES_HOST: db
+  POSTGRES_HOST: __INSERT__
   AWS_REGION: us-east-1
   AWS_COGNITO_USERPOOLID: __INSERT__
   AWS_COGNITO_CLIENTID: __INSERT__
