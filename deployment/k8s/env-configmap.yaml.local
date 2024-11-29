@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  POSTGRES_DB: trackerdb
+  POSTGRES_HOST: db
+  AWS_REGION: us-east-1
+  AWS_COGNITO_USERPOOLID: __INSERT__
+  AWS_COGNITO_CLIENTID: __INSERT__
+  API_URL: http://localhost:3000
+  URL: http://localhost:5173
+  TOKEN_USE: access
+  TOKEN_EXPIRATION: 3600000
+metadata:
+  name: env-config
+  

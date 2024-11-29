@@ -1,3 +1,6 @@
+env-configmap.yaml
+env-secret.yaml
+
 # Logs
 logs
 *.log
