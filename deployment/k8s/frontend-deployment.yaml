@@ -20,7 +20,7 @@ spec:
         name: frontend
         imagePullPolicy: Always          
         ports:
-        - containerPort: 80
+        - containerPort: 5173
         resources:
           requests:
             memory: "64Mi"
@@ -29,22 +29,22 @@ spec:
             memory: "1024Mi"
             cpu: "500m" 
         env:
-          - name: AWS_REGION
+          - name: VITE_AWS_REGION
             valueFrom:
               configMapKeyRef:
                 name: env-config
                 key: AWS_REGION
-          - name: AWS_COGNITO_USERPOOLID
+          - name: VITE_AWS_COGNITO_USERPOOLID
             valueFrom:
               configMapKeyRef:
                 name: env-config
                 key: AWS_COGNITO_USERPOOLID
-          - name: AWS_COGNITO_CLIENTID
+          - name: VITE_AWS_COGNITO_CLIENTID
             valueFrom:
               configMapKeyRef:
                 name: env-config
                 key: AWS_COGNITO_CLIENTID
-          - name: API_URL
+          - name: VITE_API_URL
             valueFrom:
               configMapKeyRef:
                 name: env-config

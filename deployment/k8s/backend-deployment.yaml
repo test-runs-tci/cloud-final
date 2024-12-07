@@ -36,7 +36,7 @@ spec:
             configMapKeyRef:
               name: env-config
               key: POSTGRES_HOST
-        - name: POSTGRES_USERNsAME
+        - name: POSTGRES_USERNAME
           valueFrom:
             secretKeyRef:
               name: env-secret
@@ -45,7 +45,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: env-secret
-              key: POSTGRESS_PASSWORD  
+              key: POSTGRES_PASSWORD  
         - name: URL
           valueFrom:
             configMapKeyRef:
@@ -60,7 +60,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: env-config
-              key: COGNITO_USER_POOL_ID
+              key: AWS_COGNITO_USERPOOLID
+        - name: AWS_COGNITO_CLIENTID
+          valueFrom:
+            configMapKeyRef:
+              name: env-config
+              key: AWS_COGNITO_CLIENTID
         - name: TOKEN_USE
           valueFrom:
             configMapKeyRef:
