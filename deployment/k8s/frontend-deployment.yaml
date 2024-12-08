@@ -16,7 +16,7 @@ spec:
         api: external        
     spec:
       containers:
-      - image: mzucc/tracker-frontend
+      - image: mzucc/tracker-frontend-prod
         name: frontend
         imagePullPolicy: Always          
         ports:
@@ -28,26 +28,5 @@ spec:
           limits:
             memory: "1024Mi"
             cpu: "500m" 
-        env:
-          - name: VITE_AWS_REGION
-            valueFrom:
-              configMapKeyRef:
-                name: env-config
-                key: AWS_REGION
-          - name: VITE_AWS_COGNITO_USERPOOLID
-            valueFrom:
-              configMapKeyRef:
-                name: env-config
-                key: AWS_COGNITO_USERPOOLID
-          - name: VITE_AWS_COGNITO_CLIENTID
-            valueFrom:
-              configMapKeyRef:
-                name: env-config
-                key: AWS_COGNITO_CLIENTID
-          - name: VITE_API_URL
-            valueFrom:
-              configMapKeyRef:
-                name: env-config
-                key: API_URL
       restartPolicy: Always
 

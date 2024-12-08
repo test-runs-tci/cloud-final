@@ -282,7 +282,7 @@ export default function FullFeaturedCrudGrid() {
     });
   }
 
-  const StyledTooltip = styled(({ className, ...props }) => (
+  const StyledTooltip = styled(({ className, ...props }: any) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {

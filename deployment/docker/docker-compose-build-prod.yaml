@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  tracker-backend:
+    build:
+      context: ../../backend
+    image: mzucc/tracker-backend
+  tracker-frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_AWS_REGION: $AWS_REGION 
+        VITE_AWS_COGNITO_USERPOOLID: $AWS_COGNITO_USERPOOLID
+        VITE_AWS_COGNITO_CLIENTID: $AWS_COGNITO_CLIENTID
+        VITE_API_URL: $API_URL
+    image: mzucc/tracker-frontend-prod
+
+
