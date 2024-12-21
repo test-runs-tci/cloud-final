@@ -3,7 +3,7 @@ language: minimal
 services: docker
 
 env:
-  - DOCKER_COMPOSE_VERSION=v2.23.0
+  - DOCKER_COMPOSE_VERSION=1.23.2
 
 before_install:
   - docker -v && docker-compose -v
