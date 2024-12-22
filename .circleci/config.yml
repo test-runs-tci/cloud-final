@@ -4,6 +4,9 @@ jobs:
     working_directory: ~/app
     docker:
       - image: cimg/base:2022.09
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
       - setup_remote_docker:
@@ -13,8 +16,17 @@ jobs:
           command: |
             docker-compose -f deployment/docker/docker-compose-build-prod.yaml build
       - run:
+          name: Tag Frontend
+          command: |
+            docker tag mzucc/tracker-frontend-prod mzucc/tracker-frontend-prod:build-$CIRCLE_BUILD_NUM
+            docker tag mzucc/tracker-backend mzucc/tracker-backend:build-$CIRCLE_BUILD_NUM
+      - run:
           name: Check Images
           command: docker image ls
+      - run:
+          name: Push Docker Images
+          command: |
+            echo "place holder"
 workflows:
   build:
     jobs:
