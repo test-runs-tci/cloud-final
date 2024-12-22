@@ -12,6 +12,9 @@ jobs:
           name: Build Docker Images
           command: |
             docker-compose -f deployment/docker/docker-compose-build-prod.yaml build
+      - run:
+          name: Check Images
+          command: docker image ls
 workflows:
   build:
     jobs:
