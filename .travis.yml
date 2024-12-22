@@ -18,7 +18,7 @@ before_install:
 
 
 install:
-  - docker-compose -f deployment/docker/docker-compose-build-prod.yaml build
+  - docker-compose -f deployment/docker/docker-compose-build-prod.yaml build tracker-backend
   - docker tag mzucc/tracker-backend mzucc/tracker-backend:build-$TRAVIS_BUILD_NUMBER 
   - docker tag mzucc/tracker-frontend mzucc/tracker-frontend:build-$TRAVIS_BUILD_NUMBER 
 
