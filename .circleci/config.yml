@@ -15,7 +15,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - build-node
+      - build-images
     # - deploy:
     #     requires:
     #       - build-node
