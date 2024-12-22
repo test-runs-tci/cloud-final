@@ -16,7 +16,7 @@ jobs:
           command: |
             docker-compose -f deployment/docker/docker-compose-build-prod.yaml build
       - run:
-          name: Tag Frontend
+          name: Tag Images with Build Number
           command: |
             docker tag mzucc/tracker-frontend-prod mzucc/tracker-frontend-prod:build-$CIRCLE_BUILD_NUM
             docker tag mzucc/tracker-backend mzucc/tracker-backend:build-$CIRCLE_BUILD_NUM
@@ -26,7 +26,9 @@ jobs:
       - run:
           name: Push Docker Images
           command: |
-            echo "place holder"
+            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+            docker push $DOCKERHUB_USERNAME/tracker-frontend-prod:build-$CIRCLE_BUILD_NUM
+            docker push $DOCKERHUB_USERNAME/tracker-backend:build-$CIRCLE_BUILD_NUM
 workflows:
   build:
     jobs:
